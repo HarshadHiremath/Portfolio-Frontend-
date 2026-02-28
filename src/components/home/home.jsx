@@ -88,181 +88,304 @@ const HomePage = () => {
 
     if (loading)
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center font-mono">
+            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
                 <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1 }}
-                    className="text-green-500 text-4xl"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                    className="text-green-500 font-mono text-xl tracking-widest"
                 >
-                    <FaTerminal />
+                    &gt; INITIALIZING_SYSTEM...
                 </motion.div>
             </div>
         );
 
     return (
-        <div className="min-h-screen bg-black text-green-500 font-mono selection:bg-green-500 selection:text-black">
-            {/* 1. Profile & Info Section */}
-            <section className="pt-20 pb-12 px-6 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="relative"
-                >
-                    <div className="absolute -inset-1 bg-green-500 rounded-full blur opacity-30 animate-pulse"></div>
-                    <img
-                        src={Profile}
-                        alt="Harshad"
-                        className="relative w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-2 border-green-500 hover:grayscale transition-all duration-500 shadow-[0_0_20px_rgba(0,255,0,0.3)]"
-                    />
-                </motion.div>
+        <div className="min-h-screen bg-[#050505] text-slate-200 font-sans selection:bg-green-500 selection:text-black">
+            {/* 1. HERO SECTION */}
+            <section className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto">
+                <div className="flex flex-col md:flex-row items-center gap-12">
+                    {/* Profile Image with Cyber-Frame */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative group"
+                    >
+                        <div className="absolute -inset-2 bg-green-500/20 rounded-2xl blur-xl group-hover:bg-green-500/40 transition duration-1000"></div>
+                        <div className="relative bg-black p-2 rounded-2xl border border-green-500/50">
+                            <img
+                                src={Profile}
+                                alt="Harshad"
+                                className="w-56 h-56 md:w-72 md:h-72 rounded-xl object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                            />
+                        </div>
+                    </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="text-center md:text-left space-y-6"
-                >
-                    {/* Name with Terminal Prompt */}
-                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase italic">
-                        <span className="text-green-800 mr-2">$</span>Harshad
-                        Hiremath
-                    </h1>
+                    {/* Content */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="flex-1 text-center md:text-left"
+                    >
+                        <div className="inline-block px-3 py-1 mb-4 border border-green-500/30 bg-green-500/10 rounded-full">
+                            <span className="text-green-400 text-xs font-medium uppercase tracking-tighter">
+                                ● PICT, Pune '26
+                            </span>
+                        </div>
 
-                    {/* Subtitle / Role */}
-                    <p className="text-xl text-green-400 opacity-90 font-semibold tracking-wide">
-                        Software Engineer | DSA Enthusiast | YouTuber | PICT Pune ’26
-                    </p>
+                        <h1 className="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight">
+                            Harshad{" "}
+                            <span className="text-green-500">Hiremath</span>
+                        </h1>
 
-                    {/* Refined Bio Text */}
-                    <div className="max-w-xl space-y-4">
-                        <p className="text-green-600 leading-relaxed border-l-2 border-green-900 pl-4 bg-green-950/5 py-2">
-                            Final-year IT student at{" "}
-                            <span className="text-green-400">
-                                PICT Pune (2026)
-                            </span>{" "}
-                            with 1000+ DSA problems solved, passionate about
-                            clean architecture, optimized systems, and designing
-                            secure, scalable, high-performance solutions.
+                        <p className="text-lg md:text-xl text-slate-400 font-medium mb-6 max-w-2xl leading-relaxed">
+                            Software Engineer &{" "}
+                            <span className="text-white">DSA Enthusiast</span>.
+                            Driven by logic and powered by code, I transform
+                            complex real-world problems into efficient,
+                            impactful software systems.
                         </p>
 
-                        <p className="text-green-700 text-sm italic font-mono">
-                            {">"} Driven by logic and powered by code, I
-                            transform complex real-world problems into
-                            efficient, impactful software systems.
-                        </p>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-4">
-                        <motion.a
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            href={link.resume}
-                            className="px-6 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-all font-bold shadow-[0_0_10px_rgba(0,255,0,0.2)]"
-                        >
-                          &gt; ACCESS_RESUME
-                        </motion.a>
-
-                        <motion.a
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            href="/contact"
-                            className="px-6 py-2 bg-green-900/20 border border-green-900 text-green-700 hover:border-green-400 hover:text-green-400 transition-all font-bold"
-                        >
-                          &gt; START_COMMUNICATION
-                        </motion.a>
-                    </div>
-                </motion.div>
-            </section>
-
-            {/* 2. Famous Quote Section */}
-            <section className="py-12 bg-green-950/10 border-y border-green-900/50">
-                <div className="max-w-4xl mx-auto px-6 text-center italic">
-                    <p className="text-2xl md:text-3xl font-light text-green-400">
-                        "Life isn’t fair. But that doesn’t mean you can’t fight for fairness."
-                    </p>
-                    <p className="mt-4 text-green-700 font-mono text-sm">
-                        — Malala Yousafzai
-                    </p>
+                        <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                            <motion.a
+                                whileHover={{ y: -2 }}
+                                href={link.resume}
+                                className="px-8 py-3 bg-green-600 hover:bg-green-500 text-black font-bold rounded-lg transition-all flex items-center gap-2"
+                            >
+                                <FaTerminal className="text-sm" /> VIEW_RESUME
+                            </motion.a>
+                            <motion.a
+                                whileHover={{ y: -2 }}
+                                href="/contact"
+                                className="px-8 py-3 border border-slate-700 hover:border-green-500 text-slate-300 hover:text-green-400 font-bold rounded-lg transition-all"
+                            >
+                                CONTACT_ME
+                            </motion.a>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
 
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-8 py-16">
-                {/* 3. My Journey & Skills */}
-                <div className="lg:col-span-2 space-y-12">
-                    <div>
-                        <h2 className="text-2xl mb-6 flex items-center gap-2">
-                            <FaMicrochip className="text-green-800" />{" "}
-                            JOURNEY_LOG
+            {/* 2. System Intercept (Quote Section) */}
+            <section className="relative py-24 overflow-hidden bg-black">
+                {/* 1. Advanced Grid Layer - Subtle and modern */}
+                <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+
+                {/* 2. Soft Radial Glow for depth */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-green-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+                <div className="max-w-4xl mx-auto px-6 text-center relative">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="space-y-10"
+                    >
+                        {/* Header / Decoder Label */}
+                        <div className="flex items-center justify-center gap-3 opacity-40">
+                            <div className="h-[1px] w-8 bg-green-500"></div>
+                            <span className="text-[10px] font-mono text-green-400 tracking-[0.5em] uppercase">
+                                Intercept_ID: 2904-B
+                            </span>
+                            <div className="h-[1px] w-8 bg-green-500"></div>
+                        </div>
+
+                        {/* The Quote: High Contrast & Refined Typography */}
+                        <h2 className="text-3xl md:text-5xl font-light leading-[1.3] text-slate-200 tracking-tight">
+                            "Life isn’t{" "}
+                            <span className="text-green-500/80 font-mono italic">
+                                fair
+                            </span>
+                            . But that doesn’t mean you can’t{" "}
+                            <br className="hidden md:block" />
+                            <span className="relative inline-block mt-2">
+                                fight for
+                                <span className="text-white font-medium ml-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                                    Fairness.
+                                </span>
+                                <motion.span
+                                    animate={{ opacity: [0, 1, 0] }}
+                                    transition={{
+                                        repeat: Infinity,
+                                        duration: 1,
+                                    }}
+                                    className="inline-block w-[3px] h-[1em] bg-green-500 ml-2 align-middle"
+                                />
+                            </span>
+                        </h2>
+
+                        {/* Author Attribution */}
+                        <div className="pt-4 flex flex-col items-center gap-2">
+                            <p className="text-sm font-mono text-slate-500 uppercase tracking-[0.3em]">
+                                — Malala Yousafzai
+                            </p>
+                            <div className="flex gap-1">
+                                <div className="w-1 h-1 bg-green-900 rounded-full"></div>
+                                <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                                <div className="w-1 h-1 bg-green-900 rounded-full"></div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* 2. STATS GRID (Journey Log) */}
+            <section className="py-16 px-6 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="md:col-span-3">
+                        <h2 className="text-sm font-mono text-green-500 mb-6 flex items-center gap-2 tracking-[0.3em]">
+                            <FaMicrochip /> // KNOWLEDGE_BASE
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {journeyStats.map((stat) => (
                                 <div
                                     key={stat._id}
-                                    className="p-4 border border-green-900 bg-green-950/10 hover:border-green-500 transition-colors"
+                                    className="p-6 rounded-xl bg-[#0f0f0f] border border-slate-800 hover:border-green-500/50 transition-all group"
                                 >
-                                    <p className="text-3xl font-bold">
+                                    <p className="text-4xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
                                         {stat.value}
                                     </p>
-                                    <p className="text-xs text-green-700 uppercase tracking-widest">
+                                    <p className="text-xs font-mono text-slate-500 uppercase tracking-widest leading-tight">
                                         {stat.description}
                                     </p>
                                 </div>
                             ))}
                         </div>
                     </div>
-                </div>
-                {/* 4. Notice Board */}
-                <div className="bg-green-950/5 border border-green-900 p-6 h-fit relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-2 opacity-10 text-6xl">
-                        <HiOutlineSpeakerphone />
-                    </div>
-                    <h2 className="text-xl mb-6 border-b border-green-900 pb-2 flex items-center gap-2 uppercase">
-                        <span className="animate-ping w-2 h-2 rounded-full bg-red-500"></span>
-                        System_Updates
-                    </h2>
-                    <div className="space-y-6">
-                        {notices.map((notice) => (
-                            <div
-                                key={notice._id}
-                                className="border-l-2 border-green-800 pl-4 py-1"
-                            >
-                                <h3 className="text-green-300 text-sm font-bold uppercase">
-                                    {notice.title}
-                                </h3>
-                                <p className="text-xs text-green-700 mt-1">
-                                    {notice.content}
-                                </p>
-                                <p className="text-[10px] text-green-900 mt-2 font-mono">
-                                    [{notice.date}]
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
 
-            {/* 5. Bottom Dynamic Sliding Window */}
-            <section className="pb-20 px-6">
-                <h2 className="max-w-7xl mx-auto text-2xl mb-8 uppercase tracking-widest text-center">
-                    Project_Visuals
-                </h2>
-                <div className="max-w-5xl mx-auto relative h-[300px] md:h-[500px] border-2 border-green-900 group">
+                    {/* 3. NOTICES (System Updates) */}
+                    <div className="bg-[#0f0f0f] border border-slate-800 rounded-xl p-6 relative overflow-hidden">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xs font-mono text-green-500 tracking-widest uppercase">
+                                Latest_Logs
+                            </h2>
+                            <HiOutlineSpeakerphone className="text-slate-700 text-xl" />
+                        </div>
+                        <div className="space-y-6 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            {notices.map((notice) => (
+                                <div
+                                    key={notice._id}
+                                    className="border-l-2 border-green-500/30 pl-4"
+                                >
+                                    <h3 className="text-white text-sm font-bold mb-1">
+                                        {notice.title}
+                                    </h3>
+                                    <p className="text-xs text-slate-500 mb-2 leading-relaxed">
+                                        {notice.content}
+                                    </p>
+                                    <span className="text-[10px] font-mono text-green-700">
+                                        {notice.date}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 4. PROJECT VISUALS */}
+            <section className="py-20 px-6 max-w-7xl mx-auto">
+                <div className="flex flex-col items-center mb-10">
+                    <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                        Project_Gallery
+                    </h2>
+                    <div className="h-1 w-20 bg-green-500"></div>
+                </div>
+
+                <div className="relative rounded-2xl overflow-hidden aspect-video md:aspect-[21/9] border border-slate-800 shadow-2xl">
                     <AnimatePresence mode="wait">
                         <motion.img
                             key={currentSlide}
                             src={slides[currentSlide].image}
-                            initial={{ opacity: 0, filter: "blur(10px)" }}
-                            animate={{ opacity: 1, filter: "blur(0px)" }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.7 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                            transition={{ duration: 0.8 }}
+                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 cursor-crosshair"
                         />
                     </AnimatePresence>
-                    <div className="absolute bottom-4 right-4 bg-black/80 px-4 py-2 text-xs border border-green-500">
-                        FRAME: 0{currentSlide + 1} // TOTAL_SLIDES
-                    </div>
                 </div>
             </section>
+
+            
+            {/* 6. VISIT COUNT BOX - SYSTEM TRAFFIC MONITOR */}
+<section className="pb-24 px-6">
+    <div className="max-w-5xl mx-auto">
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative group overflow-hidden rounded-2xl bg-gradient-to-r from-green-500/5 via-transparent to-green-500/5 border border-white/5 p-[1px]"
+        >
+            {/* Inner Content */}
+            <div className="bg-[#080808]/90 backdrop-blur-xl rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                {/* Left Side: Status & Label */}
+                <div className="flex items-center gap-5">
+                    <div className="relative">
+                        {/* Heartbeat Pulse Effect */}
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                    </div>
+                    <div>
+                        <h4 className="text-white font-bold tracking-tight text-lg">System Traffic</h4>
+                        <p className="text-slate-500 font-mono text-[10px] uppercase tracking-[0.2em]">Live_User_Metrics // Node_01</p>
+                    </div>
+                </div>
+
+                {/* Center: The Count with Neon Glow */}
+                <div className="flex flex-col items-center md:items-end">
+                    <div className="flex items-baseline gap-2">
+                        <span className="text-slate-600 font-mono text-sm uppercase tracking-tighter">Total_Hits:</span>
+                        <span className="text-5xl font-black text-white drop-shadow-[0_0_15px_rgba(34,197,94,0.3)] tracking-tighter">
+                            {/* You can replace this static number with your dynamic visitor variable */}
+                            1,248
+                        </span>
+                    </div>
+                    <div className="h-1 w-full max-w-[120px] bg-white/5 mt-2 rounded-full overflow-hidden">
+                        <motion.div 
+                            initial={{ width: 0 }}
+                            whileInView={{ width: "70%" }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="h-full bg-gradient-to-r from-green-500 to-emerald-400"
+                        />
+                    </div>
+                </div>
+
+                {/* Right Side: Network Tag */}
+                <div className="hidden lg:block border-l border-white/10 pl-8">
+                    <div className="text-[10px] font-mono text-slate-500 space-y-1">
+                        <p className="flex justify-between gap-4"><span>STP:</span> <span className="text-green-500">SECURE</span></p>
+                        <p className="flex justify-between gap-4"><span>LATENCY:</span> <span className="text-green-500">12ms</span></p>
+                        <p className="flex justify-between gap-4"><span>REGION:</span> <span className="text-green-500">GLOBAL</span></p>
+                    </div>
+                </div>
+
+            </div>
+
+            {/* Subtle decorative "glitch" corner */}
+            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-green-500/20 rounded-tr-2xl group-hover:border-green-500/50 transition-colors"></div>
+        </motion.div>
+    </div>
+</section>
+
+
+            {/* CSS for custom scrollbar in notices */}
+            <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #1a1a1a;
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #22c55e;
+                }
+            `}</style>
         </div>
     );
 };
