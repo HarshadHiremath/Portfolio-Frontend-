@@ -12,6 +12,7 @@ import {
     FaCode,
     FaMicrochip,
 } from "react-icons/fa";
+import { BiLoaderCircle } from "react-icons/bi";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import Banner0 from "../../assets/Banner0.png";
 import Banner1 from "../../assets/Banner1.jpg";
@@ -86,23 +87,19 @@ const HomePage = () => {
         return () => clearInterval(interval);
     }, [slides.length]);
 
-    if (loading)
-        return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-                <motion.div
-                    animate={{ opacity: [0, 1, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                    className="text-green-500 font-mono text-xl tracking-widest"
-                >
-                    &gt; INITIALIZING_SYSTEM...
-                </motion.div>
-            </div>
-        );
+        if (loading) return (
+                <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center font-mono text-green-500">
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                    <BiLoaderCircle className="text-6xl" />
+                  </motion.div>
+                  <p className="mt-4 font-bold tracking-[0.1em] uppercase text-xl">&gt; INITIALIZING_SYSTEM..!</p>
+                </div>
+              );
 
     return (
         <div className="min-h-screen bg-[#050505] text-slate-200 font-sans selection:bg-green-500 selection:text-black">
             {/* 1. HERO SECTION */}
-            <section className="relative pt-32 pb-20 px-6 max-w-7xl mx-auto">
+            <section className="relative pt-20 pb-20 px-6 max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center gap-12">
                     {/* Profile Image with Cyber-Frame */}
                     <motion.div
@@ -166,7 +163,7 @@ const HomePage = () => {
             </section>
 
             {/* 2. System Intercept (Quote Section) */}
-            <section className="relative py-24 overflow-hidden bg-black">
+            <section className="relative py-5 overflow-hidden bg-black">
                 {/* 1. Advanced Grid Layer - Subtle and modern */}
                 <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
 
@@ -182,10 +179,10 @@ const HomePage = () => {
                         className="space-y-10"
                     >
                         {/* Header / Decoder Label */}
-                        <div className="flex items-center justify-center gap-3 opacity-40">
+                        <div className="flex items-center justify-center gap-3 opacity-70">
                             <div className="h-[1px] w-8 bg-green-500"></div>
-                            <span className="text-[10px] font-mono text-green-400 tracking-[0.5em] uppercase">
-                                Intercept_ID: 2904-B
+                            <span className="text-[12px] font-mono text-green-400 tracking-[0.3em] uppercase">
+                                Intercept_ID: 1121-HGI
                             </span>
                             <div className="h-[1px] w-8 bg-green-500"></div>
                         </div>
@@ -216,7 +213,7 @@ const HomePage = () => {
 
                         {/* Author Attribution */}
                         <div className="pt-4 flex flex-col items-center gap-2">
-                            <p className="text-sm font-mono text-slate-500 uppercase tracking-[0.3em]">
+                            <p className="text-sm font-mono text-slate-200 uppercase tracking-[0.2em]">
                                 — Malala Yousafzai
                             </p>
                             <div className="flex gap-1">
@@ -233,7 +230,7 @@ const HomePage = () => {
             <section className="py-16 px-6 max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="md:col-span-3">
-                        <h2 className="text-sm font-mono text-green-500 mb-6 flex items-center gap-2 tracking-[0.3em]">
+                        <h2 className="text-sm font-bold text-green-500 mb-6 flex items-center gap-2 tracking-[0.3em]">
                             <FaMicrochip /> // KNOWLEDGE_BASE
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -245,7 +242,7 @@ const HomePage = () => {
                                     <p className="text-4xl font-bold text-white mb-2 group-hover:text-green-400 transition-colors">
                                         {stat.value}
                                     </p>
-                                    <p className="text-xs font-mono text-slate-500 uppercase tracking-widest leading-tight">
+                                    <p className="text-xs font-bold text-blue-100 uppercase tracking-widest leading-tight">
                                         {stat.description}
                                     </p>
                                 </div>
@@ -256,7 +253,7 @@ const HomePage = () => {
                     {/* 3. NOTICES (System Updates) */}
                     <div className="bg-[#0f0f0f] border border-slate-800 rounded-xl p-6 relative overflow-hidden">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xs font-mono text-green-500 tracking-widest uppercase">
+                            <h2 className="text-xs font-bold text-green-500 tracking-widest uppercase">
                                 Latest_Logs
                             </h2>
                             <HiOutlineSpeakerphone className="text-slate-700 text-xl" />
@@ -267,13 +264,13 @@ const HomePage = () => {
                                     key={notice._id}
                                     className="border-l-2 border-green-500/30 pl-4"
                                 >
-                                    <h3 className="text-white text-sm font-bold mb-1">
+                                    <h3 className="text-[16px] font-bold mb-1 text-green-500">
                                         {notice.title}
                                     </h3>
-                                    <p className="text-xs text-slate-500 mb-2 leading-relaxed">
+                                    <p className="text-xs font-bold text-slate-200 mb-2 leading-relaxed">
                                         {notice.content}
                                     </p>
-                                    <span className="text-[10px] font-mono text-green-700">
+                                    <span className="text-[12px] font-bold text-green-500">
                                         {notice.date}
                                     </span>
                                 </div>
@@ -307,68 +304,88 @@ const HomePage = () => {
                 </div>
             </section>
 
-            
             {/* 6. VISIT COUNT BOX - SYSTEM TRAFFIC MONITOR */}
-<section className="pb-24 px-6">
-    <div className="max-w-5xl mx-auto">
-        <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative group overflow-hidden rounded-2xl bg-gradient-to-r from-green-500/5 via-transparent to-green-500/5 border border-white/5 p-[1px]"
-        >
-            {/* Inner Content */}
-            <div className="bg-[#080808]/90 backdrop-blur-xl rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-                
-                {/* Left Side: Status & Label */}
-                <div className="flex items-center gap-5">
-                    <div className="relative">
-                        {/* Heartbeat Pulse Effect */}
-                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                        <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
-                    </div>
-                    <div>
-                        <h4 className="text-white font-bold tracking-tight text-lg">System Traffic</h4>
-                        <p className="text-slate-500 font-mono text-[10px] uppercase tracking-[0.2em]">Live_User_Metrics // Node_01</p>
-                    </div>
+            <section className="pb-24 px-6">
+                <div className="max-w-5xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="relative group overflow-hidden rounded-2xl bg-gradient-to-r from-green-500/5 via-transparent to-green-500/5 border border-white/5 p-[1px]"
+                    >
+                        {/* Inner Content */}
+                        <div className="bg-[#080808]/90 backdrop-blur-xl rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                            {/* Left Side: Status & Label */}
+                            <div className="flex items-center gap-5">
+                                <div className="relative">
+                                    {/* Heartbeat Pulse Effect */}
+                                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                                </div>
+                                <div>
+                                    <h4 className="text-white font-bold tracking-tight text-lg">
+                                        System Traffic
+                                    </h4>
+                                    <p className="text-white font-bold text-[12px] uppercase tracking-[0.2em]">
+                                        Live_User_Metrics
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Center: The Count with Neon Glow */}
+                            <div className="flex flex-col items-center md:items-end">
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-white font-bold text-sm uppercase tracking-tighter">
+                                        Total_Hits:
+                                    </span>
+                                    <span className="text-5xl font-black text-white drop-shadow-[0_0_15px_rgba(34,197,94,0.3)] tracking-tighter">
+                                        {/* You can replace this static number with your dynamic visitor variable */}
+                                        1,121
+                                    </span>
+                                </div>
+                                <div className="h-1 w-full max-w-[120px] bg-white/5 mt-2 rounded-full overflow-hidden">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        whileInView={{ width: "70%" }}
+                                        transition={{
+                                            duration: 1.5,
+                                            ease: "easeOut",
+                                        }}
+                                        className="h-full bg-gradient-to-r from-green-500 to-emerald-400"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Right Side: Network Tag */}
+                            <div className="hidden lg:block border-l border-white/10 pl-8">
+                                <div className="text-[12px] font-bold text-slate-500 space-y-1">
+                                    <p className="flex justify-between gap-4">
+                                        <span>STP:</span>{" "}
+                                        <span className="text-green-500">
+                                            SECURE
+                                        </span>
+                                    </p>
+                                    <p className="flex justify-between gap-4">
+                                        <span>LATENCY:</span>{" "}
+                                        <span className="text-green-500">
+                                            12ms
+                                        </span>
+                                    </p>
+                                    <p className="flex justify-between gap-4">
+                                        <span>REGION:</span>{" "}
+                                        <span className="text-green-500">
+                                            GLOBAL
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Subtle decorative "glitch" corner */}
+                        <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-green-500/20 rounded-tr-2xl group-hover:border-green-500/50 transition-colors"></div>
+                    </motion.div>
                 </div>
-
-                {/* Center: The Count with Neon Glow */}
-                <div className="flex flex-col items-center md:items-end">
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-slate-600 font-mono text-sm uppercase tracking-tighter">Total_Hits:</span>
-                        <span className="text-5xl font-black text-white drop-shadow-[0_0_15px_rgba(34,197,94,0.3)] tracking-tighter">
-                            {/* You can replace this static number with your dynamic visitor variable */}
-                            1,248
-                        </span>
-                    </div>
-                    <div className="h-1 w-full max-w-[120px] bg-white/5 mt-2 rounded-full overflow-hidden">
-                        <motion.div 
-                            initial={{ width: 0 }}
-                            whileInView={{ width: "70%" }}
-                            transition={{ duration: 1.5, ease: "easeOut" }}
-                            className="h-full bg-gradient-to-r from-green-500 to-emerald-400"
-                        />
-                    </div>
-                </div>
-
-                {/* Right Side: Network Tag */}
-                <div className="hidden lg:block border-l border-white/10 pl-8">
-                    <div className="text-[10px] font-mono text-slate-500 space-y-1">
-                        <p className="flex justify-between gap-4"><span>STP:</span> <span className="text-green-500">SECURE</span></p>
-                        <p className="flex justify-between gap-4"><span>LATENCY:</span> <span className="text-green-500">12ms</span></p>
-                        <p className="flex justify-between gap-4"><span>REGION:</span> <span className="text-green-500">GLOBAL</span></p>
-                    </div>
-                </div>
-
-            </div>
-
-            {/* Subtle decorative "glitch" corner */}
-            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-green-500/20 rounded-tr-2xl group-hover:border-green-500/50 transition-colors"></div>
-        </motion.div>
-    </div>
-</section>
-
+            </section>
 
             {/* CSS for custom scrollbar in notices */}
             <style jsx>{`
