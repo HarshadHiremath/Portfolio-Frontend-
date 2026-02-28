@@ -44,9 +44,6 @@ const ScrollToTop = () => {
 
 
 
-
-
-
 const App = () => {
   const [IsLoading, setIsLoading] = useState(true);
   const [isHome, setIsHome] =useState(true);
@@ -55,7 +52,7 @@ const App = () => {
     setIsHome(location.pathname === '/')
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 5000);
   }, []);
 
   return (
