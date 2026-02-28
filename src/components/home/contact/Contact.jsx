@@ -1,97 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope, FaPhone } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaLinkedin, FaGithub, FaTwitter, FaEnvelope, FaPhone, FaTerminal, FaMapMarkerAlt } from "react-icons/fa";
 
 const Contact = () => {
-
   const [link, setLink] = useState({});
-
-  useEffect(() => {
-      const fetchLinks = async () => {
-        try {
-          const response = await fetch(`${import.meta.env.VITE_LOCALHOST}/link`);
-          if (!response.ok) {
-            throw new Error(`Failed to fetch links: ${response.statusText}`);
-          }
-          const data = await response.json();
-  
-          // Remove unwanted fields (_id, __v)
-          const sanitizedData = Object.keys(data).reduce((acc, key) => {
-            if (key !== "_id" && key !== "__v") {
-              acc[key] = data[key];
-            }
-            return acc;
-          }, {});
-  
-          setLink(sanitizedData);
-        } catch (err) {
-          alert("Error :"+err);
-        }
-      };
-      fetchLinks();
-    }, []); 
-
-
-
-  // Form state
-  const [formData, setFormData] = useState({
-    user: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  // Error state
+  const [formData, setFormData] = useState({ user: "", email: "", phone: "", message: "" });
   const [errors, setErrors] = useState({});
-
-  // Loading state for form submission
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Success state for feedback
   const [success, setSuccess] = useState(false);
-
-  // Server error message
   const [serverError, setServerError] = useState("");
 
-  // Handle input changes
+  useEffect(() => {
+    const fetchLinks = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_LOCALHOST}/link`);
+        if (!response.ok) throw new Error(`Failed to fetch links`);
+        const data = await response.json();
+        const sanitizedData = Object.keys(data).reduce((acc, key) => {
+          if (key !== "_id" && key !== "__v") acc[key] = data[key];
+          return acc;
+        }, {});
+        setLink(sanitizedData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchLinks();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear errors for the field being edited
     setErrors((prev) => ({ ...prev, [name]: "" }));
     setSuccess(false);
     setServerError("");
   };
 
-  // Validate form
   const validate = () => {
     const newErrors = {};
-    const trimmedData = {
-      user: formData.user.trim(),
-      email: formData.email.trim(),
-      phone: formData.phone.trim(),
-      message: formData.message.trim(),
-    };
-
-    if (!trimmedData.user) newErrors.user = "Name is required";
-    if (!trimmedData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(trimmedData.email)) {
-      newErrors.email = "Email is invalid";
+    if (!formData.user.trim()) newErrors.user = "IDENTITY_REQUIRED";
+    if (!formData.email.trim()) {
+      newErrors.email = "UPLINK_EMAIL_REQUIRED";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "INVALID_UPLINK_PROTOCOL";
     }
-    if (!trimmedData.phone) {
-      newErrors.phone = "Phone number is required";
-    } else {
-      const cleanPhone = trimmedData.phone.replace(/\D/g, "");
-      if (!/^\d{10}$/.test(cleanPhone)) {
-        newErrors.phone = "Phone number must be 10 digits";
-      }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "COMMS_NUMBER_REQUIRED";
+    } else if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, ""))) {
+      newErrors.phone = "INVALID_COMMS_FORMAT";
     }
-    if (!trimmedData.message) newErrors.message = "Message is required";
-
+    if (!formData.message.trim()) newErrors.message = "DATA_PACKET_EMPTY";
     return newErrors;
   };
 
-  // Handle submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -99,237 +60,174 @@ const Contact = () => {
       setErrors(validationErrors);
       return;
     }
-    setErrors({});
-    setServerError("");
-    setSuccess(false);
     setIsSubmitting(true);
-
     try {
       const response = await fetch(`${import.meta.env.VITE_LOCALHOST}/contact`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
         setSuccess(true);
         setFormData({ user: "", email: "", phone: "", message: "" });
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        setServerError(errorData.error || "Failed to send message");
+        const errorData = await response.json();
+        setServerError(errorData.error || "UPLINK_FAILED");
       }
     } catch (error) {
-      setServerError("Network error. Please try again later.");
-      console.error("Submission error:", error);
+      setServerError("NETWORK_DISRUPTION");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen bg-black text-green-500 font-mono py-20 px-4 selection:bg-green-500 selection:text-black">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8">
-          Let’s Connect
-        </h2>
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic flex justify-center items-center gap-4">
+            <FaTerminal className="text-green-900 text-4xl" /> ESTABLISH_UPLINK
+          </h2>
+          <p className="text-green-800 mt-2 tracking-[0.4em] uppercase text-sm">// SECURE_CHANNEL_INITIATED</p>
+        </motion.div>
 
-        {/* Main Grid: Form and Map/Contact Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Form */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Send a Message</h3>
-            {success && (
-              <p
-                className="text-green-500 text-center mb-4"
-                role="alert"
-                aria-live="assertive"
-              >
-                Message sent successfully!
-              </p>
-            )}
-            {serverError && (
-              <p
-                className="text-red-500 text-center mb-4"
-                role="alert"
-                aria-live="assertive"
-              >
-                {serverError}
-              </p>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Form Side */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-green-950/10 border border-green-900 p-8 relative overflow-hidden group"
+          >
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent opacity-30 group-hover:opacity-100 transition-opacity"></div>
+            
+            <h3 className="text-2xl font-bold mb-8 uppercase tracking-widest italic border-b border-green-900 pb-2">Send_Data_Packet</h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {["user", "email", "phone"].map((field) => (
+                <div key={field}>
+                  <label htmlFor={field} className="block text-xs font-bold text-green-800 uppercase mb-2">
+                    {field === "user" ? "Identity_Tag" : `${field}_Protocol`}
+                  </label>
+                  <input
+                    type={field === "email" ? "email" : "text"}
+                    id={field}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    className="w-full bg-black border border-green-900 p-3 text-green-400 focus:border-green-400 focus:outline-none focus:shadow-[0_0_10px_rgba(0,255,0,0.2)] transition-all"
+                    placeholder={`ENTER_${field.toUpperCase()}...`}
+                  />
+                  {errors[field] && <p className="mt-1 text-[10px] text-red-500 font-bold tracking-widest">{">"} {errors[field]}</p>}
+                </div>
+              ))}
+              
               <div>
-                <label
-                  htmlFor="user"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="user"
-                  name="user"
-                  value={formData.user}
-                  onChange={handleChange}
-                  className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Your Name"
-                  aria-invalid={!!errors.user}
-                  aria-describedby={errors.user ? "user-error" : undefined}
-                />
-                {errors.user && (
-                  <p id="user-error" className="mt-1 text-sm text-red-500">
-                    {errors.user}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Your Email"
-                  aria-invalid={!!errors.email}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                />
-                {errors.email && (
-                  <p id="email-error" className="mt-1 text-sm text-red-500">
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Your Phone Number"
-                  aria-invalid={!!errors.phone}
-                  aria-describedby={errors.phone ? "phone-error" : undefined}
-                />
-                {errors.phone && (
-                  <p id="phone-error" className="mt-1 text-sm text-red-500">
-                    {errors.phone}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Message
-                </label>
+                <label htmlFor="message" className="block text-xs font-bold text-green-800 uppercase mb-2">Message_Payload</label>
                 <textarea
                   id="message"
                   name="message"
+                  rows="4"
                   value={formData.message}
                   onChange={handleChange}
-                  rows="4"
-                  className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Your Message"
-                  aria-invalid={!!errors.message}
-                  aria-describedby={errors.message ? "message-error" : undefined}
+                  className="w-full bg-black border border-green-900 p-3 text-green-400 focus:border-green-400 focus:outline-none focus:shadow-[0_0_10px_rgba(0,255,0,0.2)] transition-all resize-none"
+                  placeholder="INPUT_MESSAGE_CONTENT..."
                 ></textarea>
-                {errors.message && (
-                  <p id="message-error" className="mt-1 text-sm text-red-500">
-                    {errors.message}
-                  </p>
-                )}
+                {errors.message && <p className="mt-1 text-[10px] text-red-500 font-bold tracking-widest">{">"} {errors.message}</p>}
               </div>
+
               <button
                 type="submit"
-                className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors disabled:bg-blue-400"
                 disabled={isSubmitting}
+                className="w-full py-4 border-2 border-green-500 text-green-500 font-black tracking-[0.3em] uppercase hover:bg-green-500 hover:text-black transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(0,255,0,0.2)]"
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? "TRANSMITTING..." : "EXECUTE_SEND"}
               </button>
             </form>
-          </div>
 
-          {/* Map and Contact Info */}
+            <AnimatePresence>
+              {(success || serverError) && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-6 p-3 text-center text-xs font-bold border ${success ? "border-green-500 text-green-500 bg-green-500/10" : "border-red-500 text-red-500 bg-red-500/10"}`}
+                >
+                  {success ? "UPLINK_SUCCESSFUL: DATA_RECEIVED" : `CRITICAL_ERROR: ${serverError}`}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Info Side */}
           <div className="space-y-8">
-            {/* Example Map Placeholder */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                         <h3 className="text-xl font-semibold text-gray-800 mb-4">My Location - {link.Location}</h3>
-                        <div className="w-full h-64 rounded-md overflow-hidden">
-                      <iframe
-                      src={link.LocationLink}
-                      className="w-full h-full border-0"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                     referrerPolicy="no-referrer-when-downgrade"
-                    title="SCTR's Pune Institute of Computer Technology Location"
-                  ></iframe>
+            {/* Map */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-green-950/10 border border-green-900 p-4"
+            >
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2 uppercase">
+                <FaMapMarkerAlt className="text-green-800" /> Current_Coordinates: <span className="text-green-400">{link.Location}</span>
+              </h3>
+              <div className="w-full h-64 rounded-none overflow-hidden border border-green-900 grayscale brightness-75 contrast-125 hover:grayscale-0 transition-all duration-700">
+                <iframe
+                  src={link.LocationLink}
+                  className="w-full h-full border-0"
+                  allowFullScreen
+                  loading="lazy"
+                  title="HQ Location"
+                ></iframe>
               </div>
-            </div>
-            {/* Contact Info */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Contact Info</h3>
-              <ul className="space-y-4">
-                <li className="flex items-center">
-                  <FaEnvelope className="text-black mr-2" />
-                  <a
-                    href={`mailto:${link.gmail}`}
-                    className="text-gray-700 hover:text-blue-600"
-                  >
-                    {link.gmail}
-                  </a>
+            </motion.div>
+
+            {/* Socials & Comms */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-green-950/10 border border-green-900 p-8"
+            >
+              <h3 className="text-xl font-bold mb-8 uppercase italic border-b border-green-900 pb-2">Comms_Directory</h3>
+              <ul className="space-y-6">
+                <li className="flex items-center gap-4 group">
+                  <div className="p-3 border border-green-900 group-hover:border-green-400 transition-colors"><FaEnvelope /></div>
+                  <div>
+                    <p className="text-[10px] text-green-900 font-bold uppercase">Email_Primary</p>
+                    <a href={`mailto:${link.gmail}`} className="text-lg hover:text-white transition-colors">{link.gmail}</a>
+                  </div>
                 </li>
-                <li className="flex items-center">
-                  <FaPhone className="text-black mr-2" />
-                  <a
-                    href="tel:+1234567890"
-                    className="text-gray-700 hover:text-blue-600"
-                  >
-                    {link.phone}
-                  </a>
-                </li>
-                <li className="flex space-x-4">
-                  <a
-                    href={link.linkedIn}
-                    className="text-blue-600 hover:text-blue-800"
-                    aria-label="LinkedIn"
-                  >
-                    <FaLinkedin size={24}  />
-                  </a>
-                  <a
-                    href={link.github}
-                    className="text-blue-600 hover:text-blue-800"
-                    aria-label="GitHub"
-                  >
-                    <FaGithub size={24} className="text-black mr-2" />
-                  </a>
-                  <a
-                    href={link.twitter}
-                    className="text-blue-600 hover:text-blue-800"
-                    aria-label="Twitter"
-                  >
-                    <FaTwitter size={24} className="text-blue mr-2"/>
-                  </a>
+                <li className="flex items-center gap-4 group">
+                  <div className="p-3 border border-green-900 group-hover:border-green-400 transition-colors"><FaPhone /></div>
+                  <div>
+                    <p className="text-[10px] text-green-900 font-bold uppercase">Secure_Line</p>
+                    <a href={`tel:${link.phone}`} className="text-lg hover:text-white transition-colors">{link.phone}</a>
+                  </div>
                 </li>
               </ul>
-            </div>
+
+              <div className="mt-10 flex gap-6">
+                {[
+                  { icon: <FaLinkedin />, href: link.linkedIn, color: "hover:text-blue-400" },
+                  { icon: <FaGithub />, href: link.github, color: "hover:text-white" },
+                  { icon: <FaTwitter />, href: link.twitter, color: "hover:text-blue-300" }
+                ].map((social, idx) => (
+                  <a 
+                    key={idx} 
+                    href={social.href} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className={`text-3xl text-green-900 ${social.color} transition-all transform hover:scale-110`}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
