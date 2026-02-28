@@ -211,7 +211,6 @@ const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <br />
                 {/* 4. Notice Board */}
                 <div className="bg-green-950/5 border border-green-900 p-6 h-fit relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-2 opacity-10 text-6xl">

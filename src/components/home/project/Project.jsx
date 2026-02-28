@@ -1,311 +1,265 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+    HiExternalLink,
+    HiTerminal,
+    HiLightningBolt,
+    HiOutlineChatAlt2,
+    HiChip,
+} from "react-icons/hi";
+import { FaGithub } from "react-icons/fa";
 
 const ProjectsPage = () => {
-  const [data, setData] = useState({
-    projects: [],
-    milestones: [],
-    marquees: [],
-    testimonials: [],
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+    const [data, setData] = useState({
+        projects: [],
+        milestones: [],
+        marquees: [],
+        testimonials: [],
+    });
+    const [loading, setLoading] = useState(true);
 
-  // Fetch data from backend
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        const apiUrl = import.meta.env.VITE_LOCALHOST;
-        const endpoints = ['projects', 'milestones', 'marquees', 'testimonials'];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const apiUrl =
+                    import.meta.env.VITE_LOCALHOST || "http://localhost:3500";
+                const endpoints = [
+                    "projects",
+                    "milestones",
+                    "marquees",
+                    "testimonials",
+                ];
+                const results = await Promise.all(
+                    endpoints.map(async (endpoint) => {
+                        const response = await fetch(`${apiUrl}/${endpoint}`);
+                        const json = await response.json();
+                        return {
+                            endpoint,
+                            data: Array.isArray(json) ? json : [],
+                        };
+                    }),
+                );
+                const newData = results.reduce((acc, { endpoint, data }) => {
+                    acc[endpoint] = data;
+                    return acc;
+                }, {});
+                setData(newData);
+                setLoading(false);
+            } catch (err) {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
-        const promises = endpoints.map(async (endpoint) => {
-          const response = await fetch(`${apiUrl}/${endpoint}`);
-          if (!response.ok) throw new Error(`Failed to fetch ${endpoint}`);
-          const data = await response.json();
-          return { endpoint, data: Array.isArray(data) ? data : [] };
-        });
-
-        const results = await Promise.all(promises);
-        const newData = results.reduce((acc, { endpoint, data }) => {
-          acc[endpoint] = data;
-          return acc;
-        }, {});
-        setData(newData);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch data');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <p className="text-gray-500 text-lg">Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <p className="text-red-500 text-lg">{error}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 flex justify-center">
-      <div className="max-w-5xl w-full">
-        {/* Header and Stats Overview */}
-        <motion.section
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">My Projects</h1>
-          <p className="text-base sm:text-lg text-gray-800 mb-6">
-            Explore the projects I’ve built, showcasing my skills and creativity.
-          </p>
-        </motion.section>
-
-        {/* Featured Project Banner */}
-        {data.projects.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-16"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
-              Featured Project
-            </h2>
-            <div className="bg-white p-4 sm:p-6 rounded-lg border flex flex-col md:flex-row items-center gap-4 sm:gap-6">
-              <img
-                src={data.projects[0].image}
-                alt={data.projects[0].title}
-                className="w-full md:w-1/2 h-48 sm:h-64 object-cover rounded-lg"
-              />
-              <div className="flex-1">
-                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
-                  {data.projects[0].title}
-                </h3>
-                <p className="text-gray-600 text-sm sm:text-base mb-4">
-                  {data.projects[0].description}
+    if (loading)
+        return (
+            <div className="min-h-screen bg-black flex flex-col items-center justify-center font-mono text-green-500">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                >
+                    <HiTerminal className="text-5xl" />
+                </motion.div>
+                <p className="mt-4 animate-pulse uppercase tracking-widest">
+                    DECRYPTING_PROJECT_DATABASE...
                 </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {data.projects[0].techStack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-blue-100 text-blue-800 text-xs sm:text-sm px-2 py-1 rounded"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-4">
-                  {data.projects[0].liveLink && (
-                    <a
-                      href={data.projects[0].liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-600 text-sm sm:text-base"
-                    >
-                      Live Demo
-                    </a>
-                  )}
-                  {data.projects[0].githubLink && (
-                    <a
-                      href={data.projects[0].githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-gray-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-600 text-sm sm:text-base"
-                    >
-                      GitHub
-                    </a>
-                  )}
-                </div>
-              </div>
             </div>
-          </motion.section>
-        )}
+        );
 
-        {/* Marquee */}
-        {data.marquees.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.5, delay: 1 }}
-            className="mb-12 overflow-hidden bg-blue-100 py-3"
-          >
-            <div className="animate-marquee whitespace-nowrap">
-              {data.marquees.map((marquee, index) => (
-                <span key={marquee._id} className="mx-4 text-gray-800 font-medium text-sm sm:text-base">
-                  {marquee.text}
-                </span>
-              ))}
-            </div>
-          </motion.section>
-        )}
+    return (
+        <div className="min-h-screen bg-black text-green-500 font-mono py-20 px-4 selection:bg-green-500 selection:text-black">
+            <div className="max-w-7xl mx-auto">
+                {/* HEADER SECTION */}
+                <motion.header
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-10 text-center relative"
+                >
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-green-500/5 blur-[100px] rounded-full"></div>
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic mb-4">
+                        <span className="text-green-900">$</span>{" "}
+                        PROJECT_ARCHIVE
+                    </h1>
+                    <p className="text-green-300 tracking-widest text-sm uppercase">
+                        Deploying robust digital systems powered by clean architecture, efficient algorithms, and scalable design principles.
+                    </p>
+                </motion.header>
 
-        {/* Project Timeline */}
-        {data.milestones.length > 0 && (
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-16"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
-              Project Milestones
-            </h2>
-            <div className="relative border-l-4 border-blue-500 flex justify-center">
-              <div className="w-full max-w-2xl">
-                {data.milestones.map((milestone, index) => (
-                  <motion.div
-                    key={milestone._id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="mb-10 ml-6"
-                  >
-                    <div className="absolute w-6 h-6 bg-blue-500 rounded-full -left-3 border-2 border-white"></div>
-                    <div className="bg-white p-4 rounded-lg border">
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-900">
-                        {milestone.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm sm:text-base">{milestone.description}</p>
-                      <p className="text-gray-500 text-xs sm:text-sm">{milestone.date}</p>
+                {/* MARQUEE STATUS BAR */}
+                {data.marquees.length > 0 && (
+                    <div className="mb-15 border-y border-green-900 bg-green-950/10 py-3 overflow-hidden whitespace-nowrap">
+                        <motion.div
+                            animate={{ x: [0, -1000] }}
+                            transition={{
+                                repeat: Infinity,
+                                duration: 25,
+                                ease: "linear",
+                            }}
+                            className="flex gap-12"
+                        >
+                            {[...data.marquees, ...data.marquees].map(
+                                (m, i) => (
+                                    <span
+                                        key={i}
+                                        className="text-sm font-bold uppercase tracking-widest flex items-center gap-3"
+                                    >
+                                        <HiLightningBolt className="text-green-400" />{" "}
+                                        {m.text}
+                                    </span>
+                                ),
+                            )}
+                        </motion.div>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.section>
-        )}
+                )}
 
-        {/* Projects Grid */}
-        <section className="mb-16">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
-            All Projects
-          </h2>
-          {data.projects.length === 0 ? (
-            <p className="text-gray-600 text-center">No projects available.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.projects.map((project, index) => (
-                <motion.div
-                  key={project._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white p-4 sm:p-6 rounded-lg border hover:shadow-md transition-shadow duration-300 flex flex-col items-center text-center"
-                >
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-32 sm:h-40 object-cover rounded-lg mb-4"
-                  />
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm sm:text-base mb-4">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4 justify-center">
-                    {project.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="bg-blue-100 text-blue-800 text-xs sm:text-sm px-2 py-1 rounded"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-4">
-                    {project.liveLink && (
-                      <a
-                        href={project.liveLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-blue-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-600 text-sm sm:text-base"
-                      >
-                        Live Demo
-                      </a>
-                    )}
-                    {project.githubLink && (
-                      <a
-                        href={project.githubLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-gray-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-600 text-sm sm:text-base"
-                      >
-                        GitHub
-                      </a>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </section>
+                {/* PROJECTS GRID */}
+                <section className="mb-32">
+                    <div className="flex items-center gap-4 mb-12">
+                        <div className="h-[1px] flex-1 bg-green-900/50"></div>
+                        <h2 className="text-2xl font-bold uppercase tracking-tighter italic">
+                            Main_Deployments
+                        </h2>
+                        <div className="h-[1px] flex-1 bg-green-900/50"></div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {data.projects.map((project, index) => (
+                            <div
+                                key={project._id}
+                                className="group relative bg-green-950/5 border border-green-900 hover:border-green-400 transition-all duration-300 h-[550px] flex flex-col overflow-hidden"
+                            >
+                                <div className="absolute top-4 left-4 z-20 bg-black/90 border border-green-500 px-3 py-1 text-xs font-bold shadow-[0_0_10px_rgba(0,255,0,0.2)]">
+                                    Project {String(index + 1).padStart(2, "0")}
+                                </div>
 
-        {/* Testimonials Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-16"
-        >
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
-            Testimonials
-          </h2>
-          {data.testimonials.length === 0 ? (
-            <p className="text-gray-600 text-center">No testimonials available.</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={testimonial._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white p-4 sm:p-6 rounded-lg border hover:shadow-md transition-shadow duration-300 flex flex-col items-center text-center"
-                >
-                  <p className="text-gray-600 text-sm sm:text-base mb-4 italic">
-                    "{testimonial.quote}"
-                  </p>
-                  <p className="text-gray-900 font-semibold text-sm sm:text-base">
-                    — {testimonial.source}
-                  </p>
-                </motion.div>
-              ))}
+                                <div className="h-48 shrink-0 overflow-hidden border-b border-green-900">
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        className="w-full h-full object-cover brightness-90 group-hover:grayscale-0 group-hover:brightness-125 transition-all duration-700"
+                                    />
+                                </div>
+
+                                <div className="p-6 flex flex-col flex-grow overflow-hidden">
+                                    <h3 className="text-2xl font-black uppercase italic mb-4 text-green-300">
+                                        {project.title}
+                                    </h3>
+                                    <div className="flex-grow overflow-y-auto pr-2 custom-scrollbar group-hover:bg-green-500/5 transition-colors p-1">
+                                        <p className="text-lg text-green-600 leading-relaxed font-medium">
+                                            {project.description}
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-4 flex flex-wrap gap-2 py-3 border-y border-green-900/30">
+                                        {project.techStack.map((tech) => (
+                                            <span
+                                                key={tech}
+                                                className="text-xs font-bold px-2 py-0.5 bg-green-900/20 border border-green-800 text-green-400 uppercase"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    <div className="mt-4 flex justify-between items-center pt-2">
+                                        {project.liveLink && (
+                                            <a
+                                                href={project.liveLink}
+                                                target="_blank"
+                                                className="flex items-center gap-2 text-sm font-black hover:text-white transition-all tracking-tighter"
+                                            >
+                                                <HiExternalLink className="text-xl" />{" "}
+                                                LIVE_DEPLOY
+                                            </a>
+                                        )}
+                                        {project.githubLink && (
+                                            <a
+                                                href={project.githubLink}
+                                                target="_blank"
+                                                className="flex items-center gap-2 text-sm font-black hover:text-white transition-all tracking-tighter"
+                                            >
+                                                <FaGithub className="text-xl" />{" "}
+                                                REPO_URI
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* MILESTONES TIMELINE */}
+                <section className="mb-32">
+                    <h2 className="text-center text-3xl font-black mb-20 italic uppercase tracking-tighter underline underline-offset-8 decoration-green-900">
+                        EXECUTION_TIMELINE
+                    </h2>
+                    <div className="relative max-w-4xl mx-auto pl-8 border-l-2 border-green-900">
+                        {data.milestones.map((m, i) => (
+                            <motion.div
+                                key={m._id}
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                className="mb-16 relative last:mb-0"
+                            >
+                                {/* Glowing Node */}
+                                <div className="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-black border-2 border-green-500 shadow-[0_0_15px_#00ff00]"></div>
+
+                                <div className="bg-green-950/5 border border-green-900/50 p-6 hover:bg-green-950/10 transition-all group">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
+                                        <h3 className="text-2xl font-bold text-green-300 uppercase tracking-tight italic group-hover:text-green-500 transition-colors">
+                                            {m.title}
+                                        </h3>
+                                        <span className="text-sm font-black bg-green-900/30 border border-green-800 px-3 py-1 text-green-500 tracking-widest">
+                                            [{m.date}]
+                                        </span>
+                                    </div>
+                                    <p className="text-base text-green-700 leading-relaxed font-small">
+                                        {m.description}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* TESTIMONIALS */}
+                <section className="pb-10">
+                    <h2 className="text-center text-4xl font-black mb-15 italic uppercase tracking-tighter border-b border-green-900 pb-4 max-w-md mx-auto">
+                        PEER_REVIEWS
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {data.testimonials.map((t) => (
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                key={t._id}
+                                className="p-8 bg-green-950/5 border-l-4 border-green-500 relative group"
+                            >
+                                <HiOutlineChatAlt2 className="absolute top-4 right-4 text-4xl text-green-900 group-hover:text-green-500 transition-colors" />
+                                <p className="text-xl leading-relaxed text-green-400 italic font-medium mb-8 italic">
+                                    "{t.quote}"
+                                </p>
+                                <div className="flex items-center gap-4">
+                                    <div className="h-[2px] w-12 bg-green-900"></div>
+                                    <span className="text-sm font-black uppercase tracking-[0.3em] text-green-600">
+                                        AUTH_SOURCE: {t.source}
+                                    </span>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
             </div>
-          )}
-        </motion.section>
-      </div>
-    </div>
-  );
+
+            <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 10px; }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #10b981; }
+      `}</style>
+        </div>
+    );
 };
-
-// Inline CSS for Marquee Animation
-const marqueeStyles = `
-  @keyframes marquee {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-  }
-  .animate-marquee {
-    display: inline-block;
-    animation: marquee 40s linear infinite;
-    animation-delay: 2s;
-  }
-`;
-
-const styleSheet = document.createElement('style');
-styleSheet.textContent = marqueeStyles;
-document.head.appendChild(styleSheet);
 
 export default ProjectsPage;
