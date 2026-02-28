@@ -1,428 +1,271 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaYoutube, FaEnvelope, FaPhone, FaSpinner } from 'react-icons/fa';
-import Banner1 from '../../assets/HomeBanner1.png';
-import Banner2 from '../../assets/HomeBanner2.png';
-import Banner3 from '../../assets/HomeBanner3.png';
-import Profile from '../../assets/Profile.jpg';
-import './index.css';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    FaGithub,
+    FaLinkedin,
+    FaTwitter,
+    FaInstagram,
+    FaYoutube,
+    FaEnvelope,
+    FaPhone,
+    FaTerminal,
+    FaCode,
+    FaMicrochip,
+} from "react-icons/fa";
+import { HiOutlineSpeakerphone } from "react-icons/hi";
+import Banner0 from "../../assets/Banner0.png";
+import Banner1 from "../../assets/Banner1.jpg";
+import Banner2 from "../../assets/Banner2.jpg";
+import Banner3 from "../../assets/Banner3.jpg";
+import Banner4 from "../../assets/Banner4.jpg";
+import Banner5 from "../../assets/Banner5.jpg";
+import Banner6 from "../../assets/Banner6.jpg";
+import Banner7 from "../../assets/Banner7.jpg";
+import Banner8 from "../../assets/Banner8.jpg";
+import Banner9 from "../../assets/Banner9.jpg";
+
+import Profile from "../../assets/Profile.png";
+import "./index.css";
 
 const HomePage = () => {
-  const slides = [
-    { image: Banner1, alt: 'Project Screenshot 1' },
-    { image: Banner2, alt: 'Project Screenshot 2' },
-    { image: Banner3, alt: 'Project Screenshot 3' },
-  ];
-  const [journeyStats, setJourneyStats] = useState([]);
-  const [notices, setNotices] = useState([]);
-  const [skills, setSkills] = useState([]);
-  const [link, setLink] = useState({});
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+    const slides = [
+        { image: Banner0, alt: "Project 0" },
+        { image: Banner1, alt: "Project 1" },
+        { image: Banner2, alt: "Project 2" },
+        { image: Banner3, alt: "Project 3" },
+        { image: Banner4, alt: "Project 4" },
+        { image: Banner5, alt: "Project 5" },
+        { image: Banner6, alt: "Project 6" },
+        { image: Banner7, alt: "Project 7" },
+        { image: Banner8, alt: "Project 8" },
+        { image: Banner9, alt: "Project 9" },
+    ];
 
-  // Validate URL (basic check for non-empty and starts with http(s)://)
-  const isValidUrl = (url) => typeof url === 'string' && url.trim() && /^https?:\/\/.+$/.test(url);
+    const [journeyStats, setJourneyStats] = useState([]);
+    const [notices, setNotices] = useState([]);
+    const [skills, setSkills] = useState([]);
+    const [link, setLink] = useState({});
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const apiUrl = import.meta.env.VITE_LOCALHOST || 'http://localhost:3500';
-        const [journeyRes, noticesRes, linksRes, skillsRes] = await Promise.all([
-          fetch(`${apiUrl}/journey`),
-          fetch(`${apiUrl}/notices`),
-          fetch(`${apiUrl}/link`), // Matches LinkRouter.js
-          fetch(`${apiUrl}/skills`),
-        ]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const apiUrl =
+                    import.meta.env.VITE_LOCALHOST || "http://localhost:3500";
+                const [journeyRes, noticesRes, linksRes, skillsRes] =
+                    await Promise.all([
+                        fetch(`${apiUrl}/journey`),
+                        fetch(`${apiUrl}/notices`),
+                        fetch(`${apiUrl}/link`),
+                        fetch(`${apiUrl}/skills`),
+                    ]);
+                const [journeyData, noticesData, linksData, skillsData] =
+                    await Promise.all([
+                        journeyRes.json(),
+                        noticesRes.json(),
+                        linksRes.json(),
+                        skillsRes.json(),
+                    ]);
+                setJourneyStats(journeyData);
+                setNotices([...noticesData].reverse());
+                setSkills(skillsData);
+                setLink(linksData || {});
+                setLoading(false);
+            } catch (err) {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
-        if (!journeyRes.ok || !noticesRes.ok || !linksRes.ok || !skillsRes.ok) {
-          throw new Error(`Fetch failed: ${[journeyRes.status, noticesRes.status, linksRes.status, skillsRes.status].join(', ')}`);
-        }
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, [slides.length]);
 
-        const [journeyData, noticesData, linksData, skillsData] = await Promise.all([
-          journeyRes.json(),
-          noticesRes.json(),
-          linksRes.json(),
-          skillsRes.json(),
-        ]);
-
-        setJourneyStats(journeyData);
-        setNotices(noticesData);
-        setSkills(skillsData);
-        const linkData = linksData || {};
-        setLink(linkData);
-        // console.log('Fetched link data:', linkData); // Debug
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to load data. Please try again later.');
-        // console.error('Fetch error:', err);
-        setLoading(false);
-        setTimeout(() => setError(''), 5000);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleDotClick = (index) => {
-    setCurrentSlide(index);
-  };
-
-  // Animation variants for social icons (matches Footer.jsx)
-  const socialIconVariants = {
-    hover: { y: -5, scale: 1.1, transition: { duration: 0.2 } },
-    tap: { scale: 0.9 },
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <FaSpinner className="animate-spin w-8 h-8 text-blue-600" aria-label="Loading" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      {/* Slideshow */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="w-full relative"
-      >
-        <div className="relative w-full h-[250px] sm:h-[400px] md:h-[500px] overflow-hidden">
-          {slides.map((slide, index) => (
-            <motion.img
-              key={index}
-              src={slide.image}
-              alt={slide.alt}
-              className={`absolute w-full h-full object-cover transition-opacity duration-1000 ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
-              initial={{ scale: 1.1 }}
-              animate={{ scale: index === currentSlide ? 1 : 1.1 }}
-              transition={{ duration: 1 }}
-              loading="lazy"
-            />
-          ))}
-        </div>
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleDotClick(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentSlide ? 'bg-blue-600' : 'bg-gray-300'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      </motion.section>
-
-      {/* Main Content */}
-      <div className="flex justify-center px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-6xl w-full">
-          {error && (
-            <motion.p
-              className="text-red-600 bg-red-100 border border-red-300 rounded-lg p-4 text-center mb-6 text-base"
-              role="alert"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {error}
-            </motion.p>
-          )}
-
-          {/* Motivational Quote */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center"
-          >
-            <blockquote className="text-2xl sm:text-3xl font-semibold text-gray-800 italic">
-              “Code is the poetry of logic, and I’m here to write masterpieces.”
-            </blockquote>
-            <p className="text-gray-600 mt-2 text-base">– Harshad Hiremath</p>
-          </motion.section>
-
-          {/* Introduction */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 flex flex-col md:flex-row items-center gap-6"
-          >
-            <motion.img
-              src={Profile}
-              alt="Harshad Hiremath"
-              className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full object-cover shadow-lg border-4 border-gradient-to-r from-blue-200 to-blue-400"
-              whileHover={{ scale: 1.3 }}
-              loading="lazy"
-            />
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Hi, I’m Harshad Hiremath</h1>
-              <p className="text-lg sm:text-xl text-gray-600 mb-4 animate-typing overflow-hidden whitespace-nowrap border-r-4 border-white">
-                Full-Stack Developer | Problem Solver | DSA
-              </p>
-              <p className="text-gray-600 mb-4 text-base max-w-xl">
-                I’m passionate about building innovative web and ML solutions. With expertise in modern technologies, I create projects that solve real-world problems.
-              </p>
-              {/* Contact Info */}
-              <div className="flex flex-col gap-3 mb-4">
-                {link.gmail && (
-                  <motion.div className="flex items-center justify-center md:justify-start gap-2" whileHover={{ x: 5 }}>
-                    <FaEnvelope className="text-gray-600 text-lg" />
-                    <a href={`mailto:${link.gmail}`} className="text-gray-600 hover:text-blue-600 transition-colors text-base">
-                      {link.gmail}
-                    </a>
-                  </motion.div>
-                )}
-                {link.phone && (
-                  <motion.div className="flex items-center justify-center md:justify-start gap-2" whileHover={{ x: 5 }}>
-                    <FaPhone className="text-gray-600 text-lg" />
-                    <a href={`tel:${link.phone}`} className="text-gray-600 hover:text-blue-600 transition-colors text-base">
-                      {link.phone}
-                    </a>
-                  </motion.div>
-                )}
-              </div>
-              {/* Buttons */}
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <a
-                  href={link.resume || '#'}
-                  target={link.resume ? '_blank' : '_self'}
-                  rel="noopener noreferrer"
-                  className={`bg-black text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105 focus:scale-105 text-base ${
-                    !link.resume ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-                  }`}
-                  aria-label="Download Harshad's resume"
-                  onClick={(e) => !link.resume && e.preventDefault()}
-                >
-                  Download Resume
-                </a>
-                <a
-                  href="/contact"
-                  className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-transform transform hover:scale-105 focus:scale-105 text-base"
-                  aria-label="Contact Harshad"
-                >
-                  Let’s Connect
-                </a>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* Skills */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">My Skills</h2>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {skills.length > 0 ? (
-                skills.map((skill) => (
-                  <motion.span
-                    key={skill._id}
-                    className="bg-blue-100 text-blue-800 text-sm sm:text-base px-3 py-1 rounded-full"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    {skill.name}
-                  </motion.span>
-                ))
-              ) : (
-                <p className="text-gray-600 text-base">No skills available.</p>
-              )}
-            </div>
-          </motion.section>
-
-          {/* Quick Stats */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">My Journey</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {journeyStats.length > 0 ? (
-                journeyStats.map((stat) => (
-                  <motion.div
-                    key={stat._id}
-                    className="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg hover:scale-105 transition-all duration-300"
-                    whileHover={{ y: -5 }}
-                  >
-                    <p className="text-3xl sm:text-4xl font-bold text-black">{stat.value}</p>
-                    <p className="text-gray-900 text-xl">{stat.description}</p>
-                  </motion.div>
-                ))
-              ) : (
-                <p className="text-gray-600 text-base text-center col-span-full">No journey stats available.</p>
-              )}
-            </div>
-          </motion.section>
-
-          {/* Notice Board */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">Update Board</h2>
-            <div className="flex justify-center">
-              {notices.length > 0 ? (
+    if (loading)
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center font-mono">
                 <motion.div
-                  className="bg-white p-6 rounded-lg shadow-md border-l-4 border-red-500 w-full max-w-2xl hover:shadow-lg transition-all duration-300"
-                  whileHover={{ scale: 1.02 }}
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                    className="text-green-500 text-4xl"
                 >
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{notices[0].title}</h3>
-                  <p className="text-gray-600 mb-2 text-base">{notices[0].content}</p>
-                  <p className="text-gray-500 text-sm">{notices[0].date}</p>
+                    <FaTerminal />
                 </motion.div>
-              ) : (
-                <p className="text-gray-600 text-base">No notices available.</p>
-              )}
             </div>
-          </motion.section>
+        );
 
-          {/* Social Media Links (matches Footer.jsx) */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center"
-          >
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Connect With Me</h2>
-            <div className="flex justify-center gap-4 flex-wrap">
-              {isValidUrl(link.github) ? (
-                <motion.a
-                  href={link.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={socialIconVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  className="bg-gray-900 p-3 rounded-full hover:text-black transition-colors focus:ring-2 focus:ring-white"
-                  aria-label="GitHub"
+    return (
+        <div className="min-h-screen bg-black text-green-500 font-mono selection:bg-green-500 selection:text-black">
+            {/* 1. Profile & Info Section */}
+            <section className="pt-20 pb-12 px-6 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="relative"
                 >
-                  <FaGithub className="w-6 h-6 text-white" />
-                </motion.a>
-              ) : (
-                // console.log('GitHub link missing or invalid:', link.github)
-                <></>
-              )}
-              {isValidUrl(link.linkedIn) ? (
-                <motion.a
-                  href={link.linkedIn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={socialIconVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  className="bg-gray-900 p-3 rounded-full hover:bg-blue-600 hover:text-white transition-colors focus:ring-2 focus:ring-blue-600"
-                  aria-label="LinkedIn"
+                    <div className="absolute -inset-1 bg-green-500 rounded-full blur opacity-30 animate-pulse"></div>
+                    <img
+                        src={Profile}
+                        alt="Harshad"
+                        className="relative w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-2 border-green-500 hover:grayscale transition-all duration-500 shadow-[0_0_20px_rgba(0,255,0,0.3)]"
+                    />
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="text-center md:text-left space-y-6"
                 >
-                  <FaLinkedin className="w-6 h-6 text-white" />
-                </motion.a>
-              ) : (
-                // console.log('LinkedIn link missing or invalid:', link.linkedIn)
-                <></>
-              )}
-              {isValidUrl(link.twitter) ? (
-                <motion.a
-                  href={link.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={socialIconVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  className="bg-gray-900 p-3 rounded-full hover:bg-blue-400 hover:text-white transition-colors focus:ring-2 focus:ring-blue-400"
-                  aria-label="Twitter"
-                >
-                  <FaTwitter className="w-6 h-6 text-white" />
-                </motion.a>
-              ) : (
-                // console.log('Twitter link missing or invalid:', link.twitter)
-                <></>
-              )}
-              {isValidUrl(link.instagram) ? (
-                <motion.a
-                  href={link.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={socialIconVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  className="bg-gray-900 p-3 rounded-full hover:bg-gradient-to-r hover:from-purple-600 hover:via-pink-600 hover:to-yellow-500 hover:text-white transition-colors focus:ring-2 focus:ring-purple-600"
-                  aria-label="Instagram"
-                >
-                  <FaInstagram className="w-6 h-6 text-white" />
-                </motion.a>
-              ) : (
-                // console.log('Instagram link missing or invalid:', link.instagram)
-                <></>
-              )}
-              {isValidUrl(link.youtube) ? (
-                <motion.a
-                  href={link.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={socialIconVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  className="bg-gray-900 p-3 rounded-full hover:bg-red-600 hover:text-white transition-colors focus:ring-2 focus:ring-red-600"
-                  aria-label="YouTube"
-                >
-                  <FaYoutube className="w-6 h-6 text-white" />
-                </motion.a>
-              ) : (
-                // console.log('YouTube link missing or invalid:', link.youtube)
-                <></>
-              )}
-              {!isValidUrl(link.github) &&
-                !isValidUrl(link.linkedIn) &&
-                !isValidUrl(link.twitter) &&
-                !isValidUrl(link.instagram) &&
-                !isValidUrl(link.youtube) && (
-                  <p className="text-gray-600 text-base">No social links available.</p>
-                )}
+                    {/* Name with Terminal Prompt */}
+                    <h1 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase italic">
+                        <span className="text-green-800 mr-2">$</span>Harshad
+                        Hiremath
+                    </h1>
+
+                    {/* Subtitle / Role */}
+                    <p className="text-xl text-green-400 opacity-90 font-semibold tracking-wide">
+                        Software Engineer | DSA Enthusiast | YouTuber | PICT Pune ’26
+                    </p>
+
+                    {/* Refined Bio Text */}
+                    <div className="max-w-xl space-y-4">
+                        <p className="text-green-600 leading-relaxed border-l-2 border-green-900 pl-4 bg-green-950/5 py-2">
+                            Final-year IT student at{" "}
+                            <span className="text-green-400">
+                                PICT Pune (2026)
+                            </span>{" "}
+                            with 1000+ DSA problems solved, passionate about
+                            clean architecture, optimized systems, and designing
+                            secure, scalable, high-performance solutions.
+                        </p>
+
+                        <p className="text-green-700 text-sm italic font-mono">
+                            {">"} Driven by logic and powered by code, I
+                            transform complex real-world problems into
+                            efficient, impactful software systems.
+                        </p>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-4">
+                        <motion.a
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            href={link.resume}
+                            className="px-6 py-2 border border-green-500 text-green-500 hover:bg-green-500 hover:text-black transition-all font-bold shadow-[0_0_10px_rgba(0,255,0,0.2)]"
+                        >
+                          &gt; ACCESS_RESUME
+                        </motion.a>
+
+                        <motion.a
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            href="/contact"
+                            className="px-6 py-2 bg-green-900/20 border border-green-900 text-green-700 hover:border-green-400 hover:text-green-400 transition-all font-bold"
+                        >
+                          &gt; START_COMMUNICATION
+                        </motion.a>
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* 2. Famous Quote Section */}
+            <section className="py-12 bg-green-950/10 border-y border-green-900/50">
+                <div className="max-w-4xl mx-auto px-6 text-center italic">
+                    <p className="text-2xl md:text-3xl font-light text-green-400">
+                        "Life isn’t fair. But that doesn’t mean you can’t fight for fairness."
+                    </p>
+                    <p className="mt-4 text-green-700 font-mono text-sm">
+                        — Malala Yousafzai
+                    </p>
+                </div>
+            </section>
+
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-8 py-16">
+                {/* 3. My Journey & Skills */}
+                <div className="lg:col-span-2 space-y-12">
+                    <div>
+                        <h2 className="text-2xl mb-6 flex items-center gap-2">
+                            <FaMicrochip className="text-green-800" />{" "}
+                            JOURNEY_LOG
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {journeyStats.map((stat) => (
+                                <div
+                                    key={stat._id}
+                                    className="p-4 border border-green-900 bg-green-950/10 hover:border-green-500 transition-colors"
+                                >
+                                    <p className="text-3xl font-bold">
+                                        {stat.value}
+                                    </p>
+                                    <p className="text-xs text-green-700 uppercase tracking-widest">
+                                        {stat.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <br />
+                {/* 4. Notice Board */}
+                <div className="bg-green-950/5 border border-green-900 p-6 h-fit relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-2 opacity-10 text-6xl">
+                        <HiOutlineSpeakerphone />
+                    </div>
+                    <h2 className="text-xl mb-6 border-b border-green-900 pb-2 flex items-center gap-2 uppercase">
+                        <span className="animate-ping w-2 h-2 rounded-full bg-red-500"></span>
+                        System_Updates
+                    </h2>
+                    <div className="space-y-6">
+                        {notices.map((notice) => (
+                            <div
+                                key={notice._id}
+                                className="border-l-2 border-green-800 pl-4 py-1"
+                            >
+                                <h3 className="text-green-300 text-sm font-bold uppercase">
+                                    {notice.title}
+                                </h3>
+                                <p className="text-xs text-green-700 mt-1">
+                                    {notice.content}
+                                </p>
+                                <p className="text-[10px] text-green-900 mt-2 font-mono">
+                                    [{notice.date}]
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-          </motion.section>
 
-          {/* CTA Banner */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="bg-gradient-to-r from-gray-900 to-gray-900 text-white p-6 sm:p-8 rounded-lg shadow-lg text-center"
-          >
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2">Explore My Work</h2>
-            <p className="mb-4 text-base">Dive into my projects and see what I’ve been building!</p>
-            <motion.a
-              href="/project"
-              className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-100 focus:bg-gray-100 transition-colors text-xl"
-              whileHover={{ scale: 1.05 }}
-              whileFocus={{ scale: 1.05 }}
-            >
-              View Projects
-            </motion.a>
-          </motion.section>
+            {/* 5. Bottom Dynamic Sliding Window */}
+            <section className="pb-20 px-6">
+                <h2 className="max-w-7xl mx-auto text-2xl mb-8 uppercase tracking-widest text-center">
+                    Project_Visuals
+                </h2>
+                <div className="max-w-5xl mx-auto relative h-[300px] md:h-[500px] border-2 border-green-900 group">
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={currentSlide}
+                            src={slides[currentSlide].image}
+                            initial={{ opacity: 0, filter: "blur(10px)" }}
+                            animate={{ opacity: 1, filter: "blur(0px)" }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                        />
+                    </AnimatePresence>
+                    <div className="absolute bottom-4 right-4 bg-black/80 px-4 py-2 text-xs border border-green-500">
+                        FRAME: 0{currentSlide + 1} // TOTAL_SLIDES
+                    </div>
+                </div>
+            </section>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default HomePage;
