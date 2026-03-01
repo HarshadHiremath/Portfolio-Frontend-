@@ -215,10 +215,10 @@ const CodingProfilesPage = () => {
                 </section>
 
                 {/* 4. BADGES SECTION */}
-                <section className="mb-20">
+                <section className="mb-5">
                     <div className="flex items-center gap-6 mb-12">
                         <div className="h-[1px] flex-1 bg-gradient-to-l from-green-500/30 to-transparent"></div>
-                        <h2 className="text-xs font-mono text-green-500 uppercase tracking-[0.4em] whitespace-nowrap">
+                        <h2 className="text-2xs font-bold text-green-500 uppercase tracking-[0.2em] whitespace-nowrap">
                             Achievement_Tokens
                         </h2>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/30 to-transparent"></div>
@@ -237,16 +237,16 @@ const CodingProfilesPage = () => {
                                         <img
                                             src={badge.logo}
                                             alt={badge.name}
-                                            className="w-14 h-14 object-contain grayscale group-hover:grayscale-0 transition-all"
+                                            className="w-14 h-14 object-contain group-hover: transition-all"
                                         />
                                     ) : (
                                         <HiLightningBolt className="text-4xl text-slate-800" />
                                     )}
                                 </div>
-                                <p className="text-xs font-bold text-white mb-1 uppercase tracking-tight">
+                                <p className="text-2xs font-bold text-white mb-1 uppercase tracking-tight">
                                     {badge.name}
                                 </p>
-                                <p className="text-[9px] font-mono text-slate-600 uppercase tracking-widest">
+                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
                                     {badge.platform}
                                 </p>
                             </motion.div>

@@ -105,63 +105,92 @@ const AboutPage = () => {
                     className="mb-32 text-center lg:text-left"
                 >
                     <div className="inline-block px-3 py-1 mb-6 border border-green-500/20 bg-green-500/5 rounded-lg">
-                        <span className="text-green-400 text-[10px] font-mono uppercase tracking-[0.4em]">
+                        <span className="text-green-400 text-[12px] font-bold uppercase tracking-[0.2em]">
                             ● System_User: Harshad_Hiremath
                         </span>
                     </div>
-                    <h1 className="text-6xl md:text-9xl font-black mb-6 tracking-tighter text-white uppercase italic leading-none">
+                    <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black mb-6 tracking-tighter text-white uppercase italic leading-none">
+                        {/* First Word (e.g., ABOUT, PROJECT, CODING) */}
                         ABOUT
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600 block sm:inline">
+                            {/* Second Word with Underscore */}
                             _ME
                         </span>
                     </h1>
-                    <p className="max-w-xl text-slate-400 text-lg font-light leading-relaxed">
-                        <span className="text-green-500 font-mono">&gt;</span>{" "}
-                        Decompiling academic records and
+                    <p className="max-w-xl text-slate-400 text-lg font-bold leading-relaxed">
+                        <span className="text-green-500 font-bold">&gt;</span>{" "}
+                        Decompiling Academic Records and
                         <span className="text-white">
                             {" "}
-                            industry execution
+                            Industry Execution
                         </span>{" "}
-                        history.
+                        History.
                     </p>
                 </motion.header>
 
                 {/* EDUCATION & EXPERIENCE DATA STREAMS */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-32">
-                    {/* Education */}
+                    {/* Education Section */}
                     <motion.section
                         variants={containerVariants}
                         initial="hidden"
-                        animate="visible"
+                        whileInView="visible"
+                        viewport={{ once: true }}
                     >
-                        <div className="flex items-center gap-4 mb-12">
-                            <HiAcademicCap className="text-green-500 text-2xl" />
-                            <h2 className="text-xs font-mono text-green-500 uppercase tracking-[0.4em]">
-                                Academic_Log
-                            </h2>
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/30 to-transparent"></div>
+                        {/* Header with Terminal Icon */}
+                        <div className="flex items-center gap-4 mb-12 group">
+                            <div className="relative">
+                                <div className="absolute -inset-2 bg-green-500/20 rounded-full blur-md group-hover:bg-green-500/40 transition duration-500"></div>
+                                <HiAcademicCap className="relative text-green-500 text-3xl md:text-4xl transition-transform duration-500 group-hover:scale-110" />
+                            </div>
+                            <div className="flex flex-col">
+                                <h2 className="text-[12px] font-mono font-bold text-green-500 uppercase tracking-[0.2em] leading-none mb-1">
+                                    System_Education
+                                </h2>
+                                <span className="text-2xl font-black text-white italic uppercase tracking-tighter">
+                                    Academic
+                                    <span className="text-green-500">_Log</span>
+                                </span>
+                            </div>
+                            <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/40 via-green-500/10 to-transparent"></div>
                         </div>
 
-                        <div className="relative border-l border-white/10 ml-4 space-y-12">
+                        {/* Timeline Path */}
+                        <div className="relative border-l-2 border-dashed border-white/5 ml-4 md:ml-6 space-y-12">
                             {sections.education.map((edu) => (
                                 <motion.div
                                     key={edu._id}
                                     variants={itemVariants}
-                                    className="relative pl-8 group"
+                                    className="relative pl-10 group"
                                 >
-                                    <div className="absolute -left-[5.5px] top-1 w-2.5 h-2.5 rounded-full bg-black border border-green-500 group-hover:shadow-[0_0_10px_#4ade80] transition-all"></div>
-                                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-green-500/30 transition-all backdrop-blur-sm">
-                                        <span className="text-[10px] font-mono text-green-500/70 block mb-2 tracking-widest">
+                                    {/* Glowing Timeline Node */}
+                                    <div className="absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-[#050505] border-2 border-green-500 group-hover:shadow-[0_0_15px_#22c55e] transition-all duration-500 z-10">
+                                        <div className="absolute inset-1 bg-green-500 rounded-full animate-pulse"></div>
+                                    </div>
+
+                                    {/* Glass Data Card */}
+                                    <div className="bg-[#0a0a0a]/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-green-500/40 transition-all duration-500 backdrop-blur-xl relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                                            <HiAcademicCap className="text-4xl text-white" />
+                                        </div>
+
+                                        <span className="inline-block px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-[12px] font-bold text-green-400 mb-4 tracking-widest uppercase">
                                             {edu.duration}
                                         </span>
-                                        <h3 className="text-xl font-bold text-white mb-1 group-hover:text-green-400 transition-colors uppercase italic">
+
+                                        <h3 className="text-xl font-black text-white mb-2 group-hover:text-green-400 transition-colors uppercase italic tracking-tight">
                                             {edu.institution}
                                         </h3>
-                                        <p className="text-sm text-slate-500 mb-4 font-mono tracking-tighter">
-                                            {edu.score}
+
+                                        <p className="text-sm font-bold text-slate-500 mb-4 tracking-tighter uppercase">
+                                            Score_Index:{" "}
+                                            <span className="text-white">
+                                                {edu.score}
+                                            </span>
                                         </p>
+
                                         <div
-                                            className="text-xs text-slate-400 leading-relaxed font-light prose-invert"
+                                            className="text-[16px] text-slate-400 leading-relaxed font-light prose-invert selection:bg-green-500/30"
                                             dangerouslySetInnerHTML={{
                                                 __html: edu.description,
                                             }}
@@ -172,37 +201,62 @@ const AboutPage = () => {
                         </div>
                     </motion.section>
 
-                    {/* Experience */}
+                    {/* Experience Section */}
                     <motion.section
                         variants={containerVariants}
                         initial="hidden"
-                        animate="visible"
+                        whileInView="visible"
+                        viewport={{ once: true }}
                     >
-                        <div className="flex items-center gap-4 mb-12">
-                            <HiBriefcase className="text-green-500 text-2xl" />
-                            <h2 className="text-xs font-mono text-green-500 uppercase tracking-[0.4em]">
-                                Experience_Node
-                            </h2>
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/30 to-transparent"></div>
+                        {/* Header with Briefcase Icon */}
+                        <div className="flex items-center gap-4 mb-12 group">
+                            <div className="relative">
+                                <div className="absolute -inset-2 bg-green-500/20 rounded-full blur-md group-hover:bg-green-500/40 transition duration-500"></div>
+                                <HiBriefcase className="relative text-green-500 text-3xl md:text-4xl transition-transform duration-500 group-hover:scale-110" />
+                            </div>
+                            <div className="flex flex-col">
+                                <h2 className="text-[12px] font-bold font-bold text-green-500 uppercase tracking-[0.2em] leading-none mb-1">
+                                    System_Experience
+                                </h2>
+                                <span className="text-2xl font-black text-white italic uppercase tracking-tighter">
+                                    Service
+                                    <span className="text-green-500">
+                                        _Nodes
+                                    </span>
+                                </span>
+                            </div>
+                            <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/40 via-green-500/10 to-transparent"></div>
                         </div>
 
-                        <div className="relative border-l border-white/10 ml-4 space-y-12">
+                        {/* Timeline Path */}
+                        <div className="relative border-l-2 border-dashed border-white/5 ml-4 md:ml-6 space-y-12">
                             {sections.experience.map((exp) => (
                                 <motion.div
                                     key={exp._id}
                                     variants={itemVariants}
-                                    className="relative pl-8 group"
+                                    className="relative pl-10 group"
                                 >
-                                    <div className="absolute -left-[5.5px] top-1 w-2.5 h-2.5 rounded-full bg-black border border-green-500 group-hover:shadow-[0_0_10px_#4ade80] transition-all"></div>
-                                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-green-500/30 transition-all backdrop-blur-sm">
-                                        <span className="text-[10px] font-mono text-green-500/70 block mb-2 tracking-widest">
+                                    {/* Glowing Timeline Node */}
+                                    <div className="absolute -left-[9px] top-2 w-4 h-4 rounded-full bg-[#050505] border-2 border-green-500 group-hover:shadow-[0_0_15px_#22c55e] transition-all duration-500 z-10">
+                                        <div className="absolute inset-1 bg-green-500 rounded-full animate-pulse"></div>
+                                    </div>
+
+                                    {/* Glass Data Card */}
+                                    <div className="bg-[#0a0a0a]/80 border border-white/10 p-6 md:p-8 rounded-2xl hover:border-green-500/40 transition-all duration-500 backdrop-blur-xl relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                                            <HiBriefcase className="text-4xl text-white" />
+                                        </div>
+
+                                        <span className="inline-block px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-[12px] font-bold text-green-400 mb-4 tracking-widest uppercase">
                                             {exp.duration}
                                         </span>
-                                        <h3 className="text-xl font-bold text-white mb-4 group-hover:text-green-400 transition-colors uppercase italic">
+
+                                        <h3 className="text-xl font-black text-white mb-4 group-hover:text-green-400 transition-colors uppercase italic tracking-tight">
                                             {exp.role}
                                         </h3>
+
                                         <div
-                                            className="text-xs text-slate-400 leading-relaxed font-light prose-invert"
+                                            className="text-[16px] text-slate-400 leading-relaxed font-light prose-invert selection:bg-green-500/30"
                                             dangerouslySetInnerHTML={{
                                                 __html: exp.description,
                                             }}
@@ -218,7 +272,7 @@ const AboutPage = () => {
                 <section className="mb-32">
                     <div className="flex items-center gap-6 mb-12">
                         <HiChip className="text-green-500 text-2xl" />
-                        <h2 className="text-xs font-mono text-green-500 uppercase tracking-[0.4em]">
+                        <h2 className="text-2xs font-bold text-green-500 uppercase tracking-[0.2em]">
                             Core_Processor_Skills
                         </h2>
                         <div className="h-[1px] flex-1 bg-gradient-to-r from-green-500/30 to-transparent"></div>
@@ -236,7 +290,7 @@ const AboutPage = () => {
                                     animate={{ top: ["0%", "100%", "0%"] }}
                                     transition={{
                                         repeat: Infinity,
-                                        duration: 4,
+                                        duration: 2,
                                         ease: "linear",
                                     }}
                                     className="absolute left-0 right-0 h-[1px] bg-green-500/20 z-10 pointer-events-none opacity-0 group-hover:opacity-100"
@@ -249,12 +303,12 @@ const AboutPage = () => {
                                             className="w-12 h-12 object-contain grayscale group-hover:grayscale-0 transition-all"
                                         />
                                     ) : (
-                                        <div className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-full font-mono text-green-500">
+                                        <div className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-full font-bold text-green-500">
                                             {skill.name?.charAt(0)}
                                         </div>
                                     )}
                                 </div>
-                                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest text-center group-hover:text-slate-200 transition-colors">
+                                <p className="text-[14px] font-bold text-white uppercase tracking-widest text-center group-hover:text-slate-200 transition-colors">
                                     {skill.name}
                                 </p>
                             </motion.div>
@@ -268,7 +322,7 @@ const AboutPage = () => {
                     <section>
                         <div className="flex items-center gap-4 mb-8">
                             <HiBadgeCheck className="text-green-500 text-2xl" />
-                            <h2 className="text-xs font-mono text-green-500 uppercase tracking-[0.4em]">
+                            <h2 className="text-2xs font-bold text-green-500 uppercase tracking-[0.2em]">
                                 Certifications
                             </h2>
                         </div>
@@ -282,11 +336,11 @@ const AboutPage = () => {
                                         {cert.logo && (
                                             <img
                                                 src={cert.logo}
-                                                className="w-8 h-8 object-contain grayscale group-hover:grayscale-0"
+                                                className="w-12 h-12 object-contain grayscale group-hover:grayscale-0"
                                                 alt=""
                                             />
                                         )}
-                                        <h4 className="text-sm font-bold text-white group-hover:text-green-400 transition-colors uppercase tracking-tight">
+                                        <h4 className="text-xl font-bold text-white group-hover:text-green-400 transition-colors uppercase tracking-tight">
                                             {cert.title}
                                         </h4>
                                     </div>
@@ -296,7 +350,7 @@ const AboutPage = () => {
                                             target="_blank"
                                             className="text-slate-500 hover:text-green-500 transition-colors"
                                         >
-                                            <HiExternalLink className="text-xl" />
+                                            <HiExternalLink className="text-2xl" />
                                         </a>
                                     )}
                                 </div>
@@ -306,9 +360,9 @@ const AboutPage = () => {
 
                     {/* Achievements */}
                     <section>
-                        <div className="flex items-center gap-4 mb-8">
+                        <div className="flex items-center gap-4 mb-2">
                             <FaTrophy className="text-green-500 text-xl" />
-                            <h2 className="text-xs font-mono text-green-500 uppercase tracking-[0.4em]">
+                            <h2 className="text-2xs font-bold text-green-500 uppercase tracking-[0.2em]">
                                 Achievements
                             </h2>
                         </div>
@@ -318,13 +372,18 @@ const AboutPage = () => {
                                     key={ach._id}
                                     className="bg-white/5 border border-white/10 p-5 rounded-xl flex items-start gap-4 hover:border-green-500/20 transition-all"
                                 >
-                                    <div className="w-1 h-1 rounded-full bg-green-500 mt-2 shadow-[0_0_5px_#22c55e]"></div>
+                                    <div className="w-5 h-2 rounded-full bg-green-500 mt-2 shadow-[0_0_5px_#22c55e]"></div>
                                     <div>
-                                        <h4 className="text-sm font-bold text-white mb-1 uppercase tracking-tight italic">
+                                        <div className="flex justify-between items-start gap-4">
+                                        <h4 className="text-lg font-bold text-white mb-1 uppercase tracking-tight italic">
                                             {ach.title}
                                         </h4>
+                                        <span className="text-[14px] font-bold font-bold text-green-500 tracking-widest">
+                                                Year : {ach.year || "2026"}
+                                            </span>
+                                        </div>
                                         <div
-                                            className="text-xs text-slate-500 font-light prose-invert leading-relaxed"
+                                            className="text-[16px] text-slate-500 font-bold prose-invert leading-relaxed"
                                             dangerouslySetInnerHTML={{
                                                 __html: ach.description,
                                             }}
