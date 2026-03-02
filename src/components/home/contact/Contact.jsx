@@ -74,40 +74,41 @@ const Contact = () => {
         }
         setIsSubmitting(true);
 
-        emailjs.send(
-        import.meta.env.VITE_EMAIL_SERVICE_ID,
-        import.meta.env.VITE_EMAIL_TEMPLATE_ID,
-        formData,
-        import.meta.env.VITE_EMAIL_PUBLIC_KEY
-      )
-      .then(
-        (result) => {
-        //   alert("Message Sent Successfully Sender✅");
-          console.log(result.text);
-        },
-        (error) => {
-          alert("Failed to send message ❌",error);
-          console.log(error.text);
-        }
-      );
+        emailjs
+            .send(
+                import.meta.env.VITE_EMAIL_SERVICE_ID,
+                import.meta.env.VITE_EMAIL_TEMPLATE_ID,
+                formData,
+                import.meta.env.VITE_EMAIL_PUBLIC_KEY,
+            )
+            .then(
+                (result) => {
+                    //   alert("Message Sent Successfully Sender✅");
+                    console.log(result.text);
+                },
+                (error) => {
+                    alert("Failed to send message ❌", error);
+                    console.log(error.text);
+                },
+            );
 
-      emailjs.send(
-        import.meta.env.VITE_EMAIL_SERVICE_ID,
-        'template_824qj44',
-        formData,
-        import.meta.env.VITE_EMAIL_PUBLIC_KEY
-      )
-      .then(
-        (result) => {
-        //   alert("Message Sent Successfully Owner ✅");
-          console.log(result.text);
-        },
-        (error) => {
-          alert("Failed to send message ❌",error);
-          console.log(error.text);
-        }
-      );
-
+        emailjs
+            .send(
+                import.meta.env.VITE_EMAIL_SERVICE_ID,
+                "template_824qj44",
+                formData,
+                import.meta.env.VITE_EMAIL_PUBLIC_KEY,
+            )
+            .then(
+                (result) => {
+                    //   alert("Message Sent Successfully Owner ✅");
+                    console.log(result.text);
+                },
+                (error) => {
+                    alert("Failed to send message ❌", error);
+                    console.log(error.text);
+                },
+            );
 
         try {
             const response = await fetch(
@@ -148,21 +149,21 @@ const Contact = () => {
                     className="mb-20 text-center lg:text-left"
                 >
                     <div className="inline-block px-3 py-1 mb-6 border border-green-500/20 bg-green-500/5 rounded-lg">
-                        <span className="text-green-400 text-[10px] font-mono uppercase tracking-[0.4em]">
+                        <span className="text-green-400 text-[12px] font-bold uppercase tracking-[0.2em]">
                             ● Protocol_Initialized: Uplink_Established
                         </span>
                     </div>
-                    <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter text-white uppercase italic leading-none">
+                    <h1 className="text-xl sm:text-xl md:text-8xl lg:text-6xl font-black mb-6 tracking-tighter text-white uppercase italic leading-none">
                         ESTABLISH
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600 block sm:inline">
                             _UPLINK
                         </span>
                     </h1>
-                    <p className="max-w-xl text-slate-400 text-lg font-light leading-relaxed">
-                        <span className="text-green-500 font-mono">&gt;</span>{" "}
-                        Initialize a secure communication channel to transmit
-                        <span className="text-white"> data packets</span> and
-                        collaborative proposals.
+                    <p className=" text-slate-400 text-lg font-light leading-relaxed">
+                        <span className="text-green-500 font-bold">&gt;</span>{" "}
+                        Feel free to reach out for collaborations, opportunities, just to
+                        <span className="text-white"> Say Hello </span> 
+                        Let’s create something impactful together.
                     </p>
                 </motion.header>
 
@@ -178,15 +179,15 @@ const Contact = () => {
                             animate={{ top: ["0%", "100%", "0%"] }}
                             transition={{
                                 repeat: Infinity,
-                                duration: 4,
+                                duration: 2,
                                 ease: "linear",
                             }}
-                            className="absolute left-0 right-0 h-[1px] bg-green-500/20 z-10 pointer-events-none opacity-0 group-hover:opacity-100"
+                            className="absolute left-0 right-0 h-[1px] bg-green-500 z-10 pointer-events-none opacity-100"
                         />
 
                         <h3 className="text-xl font-bold text-white mb-8 uppercase tracking-widest italic border-b border-white/5 pb-4 flex items-center gap-3">
                             <FaSatellite className="text-green-500 text-sm" />{" "}
-                            Send_Message_Packet
+                            Send Message / Feedback
                         </h3>
 
                         <form
@@ -196,10 +197,10 @@ const Contact = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {["user", "email"].map((field) => (
                                     <div key={field}>
-                                        <label className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2 block">
+                                        <label className="text-[14px] font-bold text-white uppercase tracking-widest mb-2 block">
                                             {field === "user"
-                                                ? "Identity_Tag"
-                                                : "Email_Protocol"}
+                                                ? "Your Name"
+                                                : "Email"}
                                         </label>
                                         <input
                                             type={
@@ -223,8 +224,8 @@ const Contact = () => {
                             </div>
 
                             <div>
-                                <label className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2 block">
-                                    Comms_Number
+                                <label className="text-[14px] font-bold text-white uppercase tracking-widest mb-2 block">
+                                    Phone_Number
                                 </label>
                                 <input
                                     type="text"
@@ -242,8 +243,8 @@ const Contact = () => {
                             </div>
 
                             <div>
-                                <label className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2 block">
-                                    Payload_Description
+                                <label className="text-[14px] font-bold text-white uppercase tracking-widest mb-2 block">
+                                    Message_Description
                                 </label>
                                 <textarea
                                     name="message"
@@ -268,11 +269,11 @@ const Contact = () => {
                                 }}
                                 whileTap={{ scale: 0.98 }}
                                 disabled={isSubmitting}
-                                className="w-full py-5 bg-green-500 text-black font-black tracking-[0.3em] uppercase rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                                className="w-full py-5 bg-green-500 text-black font-black uppercase rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3"
                             >
                                 {isSubmitting
-                                    ? "TRANSMITTING..."
-                                    : "EXECUTE_SEND_REQUEST"}
+                                    ? "MESSAGE_SENDING..."
+                                    : "SEND_MESSAGE"}
                             </motion.button>
                         </form>
 
@@ -299,7 +300,7 @@ const Contact = () => {
                             animate={{ opacity: 1, x: 0 }}
                             className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 shadow-xl"
                         >
-                            <h3 className="text-[10px] font-mono text-green-500 mb-6 flex items-center gap-3 tracking-[0.3em] uppercase">
+                            <h3 className="text-[14px] font-bold text-green-500 mb-6 flex items-center gap-3 tracking-[0.1em] uppercase">
                                 <FaMapMarkerAlt /> GPS_Coordinates:{" "}
                                 <span className="text-white">
                                     {link.Location}
@@ -323,7 +324,7 @@ const Contact = () => {
                             transition={{ delay: 0.1 }}
                             className="bg-gradient-to-b from-white/5 to-transparent border border-white/10 rounded-3xl p-8"
                         >
-                            <h3 className="text-xs font-mono text-slate-500 mb-8 uppercase tracking-[0.4em]">
+                            <h3 className="text-sm font-bold text-slate-500 mb-8 uppercase tracking-[0.2em]">
                                 Direct_Comms_Directory
                             </h3>
                             <ul className="space-y-8">

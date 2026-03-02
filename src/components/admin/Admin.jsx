@@ -118,13 +118,57 @@ const Dashboard = ({ toggleSidebar, activeComponent }) => {
   );
 };
 
+
+
+
+
 function Admin() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [activeComponent, setActiveComponent] = useState(null);
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev);
   };
+
+  // 🔐 Password check
+  const handleLogin = () => {
+    if (password === `${import.meta.env.VITE_ADMIN_PASSWORD}`) {
+      setIsAuthenticated(true);
+    } else {
+      alert("Incorrect Password");
+    }
+  };
+
+  // 🔒 Show password screen first
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="bg-[#0a0a0a] p-8 rounded-xl border border-green-500/30 w-80">
+          <h2 className="text-white text-xl mb-4 text-center">
+            Admin Access Required
+          </h2>
+
+          <input
+            type="password"
+            placeholder="Enter Admin Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 mb-4 bg-white/10 text-white rounded outline-none"
+          />
+
+          <button
+            onClick={handleLogin}
+            className="w-full bg-green-500 text-black py-2 rounded font-bold"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex">
@@ -133,7 +177,10 @@ function Admin() {
         toggleSidebar={toggleSidebar}
         setActiveComponent={setActiveComponent}
       />
-      <Dashboard toggleSidebar={toggleSidebar} activeComponent={activeComponent} />
+      <Dashboard
+        toggleSidebar={toggleSidebar}
+        activeComponent={activeComponent}
+      />
     </div>
   );
 }

@@ -51,7 +51,7 @@ const ProjectsPage = () => {
         fetchData();
     }, []);
 
-    if (loading)
+    if (loading) 
         return (
             <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center font-mono text-green-500">
                 <motion.div

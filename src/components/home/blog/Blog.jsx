@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { HiTerminal, HiLightningBolt, HiBookOpen, HiSearch } from "react-icons/hi";
 import BlogWall from "../../../assets/BlogWallpaper.jpg";
-
+import { BiLoaderCircle } from "react-icons/bi";
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,14 +27,24 @@ const Blog = () => {
     fetchBlogs();
   }, []);
 
-  if (loading) return (
-    <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center font-mono text-green-500">
-      <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
-        <HiTerminal className="text-6xl" />
-      </motion.div>
-      <p className="mt-4 tracking-[0.3em] uppercase text-xs">Accessing_Knowledge_Base...</p>
-    </div>
-  );
+  if (loading)
+          return (
+              <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center font-mono text-green-500">
+                  <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{
+                          repeat: Infinity,
+                          duration: 1,
+                          ease: "linear",
+                      }}
+                  >
+                      <BiLoaderCircle className="text-6xl" />
+                  </motion.div>
+                  <p className="mt-4 font-bold tracking-[0.1em] uppercase text-xl">
+                      INITIALIZING_BLOGS_DATA..!
+                  </p>
+              </div>
+          );
 
   return (
     <div className="min-h-screen bg-[#050505] text-slate-300 font-sans selection:bg-green-500 selection:text-black overflow-x-hidden">
